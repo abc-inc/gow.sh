@@ -98,7 +98,7 @@ GOBASEURL=https://company.host/downloads/go gow.sh go1.13 download
 This can be used to download the latest stable release:
 
 ```bash
-version="$(curl -fs https://golang.org/VERSION?m=text)" # go1.16
+version="$(curl -fs https://go.dev/VERSION?m=text)" # go1.17.5
 gow.sh "${version}" download
 ```
 
