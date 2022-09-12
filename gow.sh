@@ -83,14 +83,14 @@ function install() {
   len="${len##*content-length: }"
   len="${len%%[[:space:]]*}"
 
-  if [[ ! -f "${archive_file}" || \
-    "$(stat -Lc %s "${archive_file}")" -ne "${len}" ]]; then
+  if [[ ! -f "${archive_file}" ||
+    "$(wc -c <"${archive_file}")" -ne "${len}" ]]; then
 
     mkdir -p "${target_dir}" || return
     curl -fLsS -o "${archive_file}" "${go_url}" || return
 
     local size
-    size="$(stat -Lc %s "${archive_file}")"
+    size="$(wc -c <"${archive_file}")"
     if [[ ! -f "${archive_file}" || "${size}" -ne "${len}" ]]; then
       echo "downloaded file ${archive_file} size ${size} doesn't match server size ${len}"
       return 1
@@ -164,7 +164,7 @@ function unpack_zip() {
 function verify_sha256() {
   local file="$1"
   local wantHex="$2"
-  if [[ "$(sha256sum -b "${file}" | cut -d" " -f1)" != "${wantHex}" ]]; then
+  if [[ "$(shasum -a 256 -b "${file}" | cut -d " " -f 1)" != "${wantHex}" ]]; then
     echo "${file} corrupt? does not have expected SHA-256 of ${wantHex}"
     return 1
   fi
